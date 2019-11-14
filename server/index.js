@@ -3,10 +3,13 @@ import { serverPort } from '../config'
 
 const app = express()
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
-})
+export default () =>
+    new Promise(resolve => {
+        app.get('/', (req, res) => {
+            res.send('<h1>Hello World!</h1>')
+        })
 
-app.listen(serverPort, () =>
-    console.log(`Started express server on port ${serverPort}`)
-)
+        app.listen(serverPort, () =>
+            resolve(`Started express server on port ${serverPort}`)
+        )
+    })

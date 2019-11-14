@@ -48,7 +48,7 @@ const clientConfig = {
 
 const serverConfig = {
     name: 'server',
-    entry: './server/index.js',
+    entry: './server/boot.js',
     output: {
         filename: 'server.js'
     },
