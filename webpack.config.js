@@ -13,10 +13,13 @@ const clientConfig = {
     devServer: {
         port: clientDevPort
     },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
     module: {
         rules: [
             {
-                test: /\.(js)$/,
+                test: /\.jsx?$/,
                 use: 'babel-loader',
                 exclude: [path.resolve(__dirname, 'node_modules')]
             },
@@ -52,11 +55,14 @@ const serverConfig = {
     module: {
         rules: [
             {
-                test: /\.(js)$/,
+                test: /\.jsx?$/,
                 use: 'babel-loader',
                 exclude: [path.resolve(__dirname, 'node_modules')]
             }
         ]
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
     },
     mode: 'development',
     externals: [nodeExternals()],
