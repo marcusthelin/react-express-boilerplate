@@ -5,73 +5,73 @@ const NodemonPlugin = require('nodemon-webpack-plugin')
 const { clientDevPort } = require('./config')
 
 const clientConfig = {
-  name: 'client',
-  entry: './src/index.js',
-  output: {
-    filename: 'app.js'
-  },
-  devServer: {
-    port: clientDevPort
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js)$/,
-        use: 'babel-loader',
-        exclude: [path.resolve(__dirname, 'node_modules')]
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true
+    name: 'client',
+    entry: './src/index.js',
+    output: {
+        filename: 'app.js'
+    },
+    devServer: {
+        port: clientDevPort
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js)$/,
+                use: 'babel-loader',
+                exclude: [path.resolve(__dirname, 'node_modules')]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true
+                        }
+                    }
+                ]
             }
-          }
         ]
-      }
+    },
+    target: 'web',
+    mode: 'development',
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: 'src/index.html'
+        })
     ]
-  },
-  target: 'web',
-  mode: 'development',
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: 'src/index.html'
-    })
-  ]
 }
 
 const serverConfig = {
-  name: 'server',
-  entry: './src/server/index.js',
-  output: {
-    filename: 'server.js'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js)$/,
-        use: 'babel-loader',
-        exclude: [path.resolve(__dirname, 'node_modules')]
-      }
+    name: 'server',
+    entry: './server/index.js',
+    output: {
+        filename: 'server.js'
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js)$/,
+                use: 'babel-loader',
+                exclude: [path.resolve(__dirname, 'node_modules')]
+            }
+        ]
+    },
+    mode: 'development',
+    externals: [nodeExternals()],
+    target: 'node',
+    node: {
+        // Need this when working with express, otherwise the build fails
+        __dirname: false, // if you don't put this is, __dirname
+        __filename: false // and __filename return blank or /
+    },
+    plugins: [
+        new NodemonPlugin({
+            watch: path.resolve(__dirname, 'dist'),
+            script: path.resolve(__dirname, 'dist/server.js')
+        })
     ]
-  },
-  mode: 'development',
-  externals: [nodeExternals()],
-  target: 'node',
-  node: {
-    // Need this when working with express, otherwise the build fails
-    __dirname: false, // if you don't put this is, __dirname
-    __filename: false // and __filename return blank or /
-  },
-  plugins: [
-    new NodemonPlugin({
-      watch: path.resolve(__dirname, 'dist'),
-      script: path.resolve(__dirname, 'dist/server.js')
-    })
-  ]
 }
 
 module.exports = [serverConfig, clientConfig]
