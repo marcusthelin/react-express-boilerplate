@@ -1,17 +1,12 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
-const NodemonPlugin = require('nodemon-webpack-plugin')
-const { clientDevPort } = require('./config')
 
 const clientConfig = {
     name: 'client',
     entry: './src/index.js',
     output: {
         filename: 'client.js'
-    },
-    devServer: {
-        port: clientDevPort
     },
     resolve: {
         extensions: ['.js', '.jsx']
@@ -23,7 +18,13 @@ const clientConfig = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react']
+                        presets: [
+                            [
+                                '@babel/preset-env',
+                                { targets: '> 0.25%, not dead' }
+                            ],
+                            '@babel/preset-react'
+                        ]
                     }
                 },
                 exclude: [path.resolve(__dirname, 'node_modules')]
@@ -43,7 +44,7 @@ const clientConfig = {
         ]
     },
     target: 'web',
-    mode: 'development',
+    mode: 'production',
     plugins: [
         new HtmlWebpackPlugin({
             template: 'src/index.html'
@@ -69,20 +70,14 @@ const serverConfig = {
     resolve: {
         extensions: ['.js', '.jsx']
     },
-    mode: 'development',
+    mode: 'production',
     externals: [nodeExternals()],
     target: 'node',
     node: {
         // Need this when working with express, otherwise the build fails
         __dirname: false, // if you don't put this is, __dirname
         __filename: false // and __filename return blank or /
-    },
-    plugins: [
-        new NodemonPlugin({
-            watch: path.resolve(__dirname, 'dist'),
-            script: path.resolve(__dirname, 'dist/server.js')
-        })
-    ]
+    }
 }
 
 module.exports = [serverConfig, clientConfig]

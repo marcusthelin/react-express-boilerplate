@@ -5,6 +5,7 @@ const app = express()
 
 export default () =>
     new Promise(resolve => {
+        // Business logic and middlewares goes here
         app.get('/', (req, res) => {
             res.send('<h1>Hello World!</h1>')
         })
